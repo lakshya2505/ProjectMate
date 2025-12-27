@@ -4,12 +4,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './assets/index.css';
 
 // IMPORT YOUR PAGES
-import LandingPage from './pages/login.jsx'; 
+import ProjectMateLanding from './pages/login.jsx';
+import LandingPage from './pages/landingpage.jsx'; 
 import ExploreProjects from './pages/projects.jsx';
 import PostNewProject from './pages/createproject.jsx'; 
 import UserProfile from './pages/profile.jsx'; 
-// --- ADD THIS LINE BELOW ---
-import ProjectDetails from './pages/ProjectDetails.jsx'; 
+import ProjectDetails from './pages/projectDetails.jsx'; 
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -17,6 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<ProjectMateLanding />} />
         <Route path="/projects" element={<ExploreProjects />} />
         <Route path="/create" element={<PostNewProject />} />
         <Route path="/profile" element={<UserProfile />} />
