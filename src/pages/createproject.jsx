@@ -31,7 +31,7 @@ export default function PostNewProject() {
     setIsPosting(true);
     try {
       await addDoc(collection(db, "projects"), {
-        title: projectName, tagline, description, projectType, rolesNeeded: roles, techStack, duration, branch: "EI Branch",
+        title: projectName, tagline, description, projectType, rolesNeeded: roles, techStack, duration,
         authorName: auth.currentUser.displayName, authorPhoto: auth.currentUser.photoURL, authorId: auth.currentUser.uid, createdAt: serverTimestamp(),
       });
       navigate('/projects');
@@ -41,18 +41,20 @@ export default function PostNewProject() {
   return (
     <div className="min-h-screen bg-[#FBFBFD] w-full font-sans antialiased text-slate-900">
       {/* Premium Navbar */}
-      <nav className="bg-white/80 backdrop-blur-md flex items-center justify-between px-8 md:px-16 py-6 border-b border-slate-200 sticky top-0 z-50 w-full">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform">
-            <Layers className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-2xl font-black text-slate-800 tracking-tighter uppercase">ProjectMate</span>
-        </Link>
-        <div className="flex items-center gap-8">
-          <Link to="/projects" className="text-slate-500 hover:text-orange-500 font-bold transition-colors">Projects</Link>
-          <Link to="/profile" className="text-slate-500 hover:text-orange-500 font-bold transition-colors">Profile</Link>
-        </div>
-      </nav>
+     <nav className="bg-white flex items-center justify-between px-8 md:px-12 py-8 border-b border-gray-200 sticky top-0 z-50 w-full">
+             <Link to="/" className="flex items-center gap-4">
+               <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center shadow-md">
+                 <Layers className="w-8 h-8 text-white" />
+               </div>
+               <span className="text-3xl font-black text-orange-500 tracking-tighter uppercase">ProjectMate</span>
+             </Link>
+             <div className="flex items-center gap-12">
+               <Link to="/projects" className="text-gray-500 hover:text-orange-500 font-semibold text-xl transition-colors">Projects</Link>
+               <Link to="/create" className="text-orange-500 font-bold text-xl border-b-4 border-orange-500" >Post Project</Link>
+               <Link to="/profile" className="text-gray-500 hover:text-orange-500 font-semibold text-xl transition-colors">Profile</Link>
+             </div>
+           </nav>
+           
 
       <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
         {/* Title Section */}
@@ -94,6 +96,7 @@ export default function PostNewProject() {
         <option value="sideProject">Side Project</option>
         <option value="startup">Startup</option>
         <option value="research">Research</option>
+         <option value="Hackathon">Hackathon</option>
         <option value="other">Other</option>
       </select>
     </div>
@@ -228,3 +231,24 @@ export default function PostNewProject() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

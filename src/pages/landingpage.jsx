@@ -1,24 +1,35 @@
-import React from 'react';
+import { auth, db, googleProvider } from '../services/firebase';
+import { signInWithPopup } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore'; // Essential for the check
 import { useNavigate } from 'react-router-dom';
 import { Layers } from 'lucide-react';
-import { auth, googleProvider } from '../services/firebase';
-import { signInWithPopup } from 'firebase/auth';
 
-export default function LoginPage() { 
+export default function LandingPage() {
   const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      if (result.user) {
-        // Redirecting to Profile as requested
-        navigate('/login'); 
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+
+    if (user) {
+      // Check if this specific UID has a document in the "users" collection
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        // RETURNING USER: Send to projects feed
+        navigate('/login');
+      } else {
+        // FIRST TIME USER: Send to setup profile
+        navigate('/setup-profile');
       }
-    } catch (error) {
-      console.error("Login Error:", error);
-      alert("Login failed: " + error.message);
     }
-  };
+  } catch (error) {
+    console.error("Login Error:", error);
+    alert("Login failed. Please use your Nirma account.");
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] w-full font-sans antialiased text-slate-900">
@@ -34,18 +45,15 @@ export default function LoginPage() {
       </nav>
 
       <main className="max-w-6xl mx-auto pt-24 md:pt-32 px-8 text-center">
-        {/* Main Heading - The "Nirma Builders" Highlighted in Orange */}
         <h1 className="text-6xl md:text-8xl lg:text-[110px] font-black tracking-tighter leading-[1.05] mb-12">
           The place for <br /> 
           <span className="text-orange-500">Nirma builders.</span>
         </h1>
         
-        {/* Paragraph - High readability text-2xl */}
         <p className="text-2xl md:text-3xl text-slate-600 mb-16 max-w-3xl mx-auto font-semibold leading-relaxed">
           Sign in to discover projects, find teammates, and ship your next big idea within the university.
         </p>
 
-        {/* Action Button - High Contrast Orange */}
         <button 
           onClick={handleGoogleLogin}
           className="bg-orange-500 text-white px-12 py-6 rounded-3xl font-black text-2xl hover:bg-orange-600 transition-all hover:scale-105 active:scale-95 shadow-[0_20px_50px_-15px_rgba(249,115,22,0.4)] flex items-center gap-6 mx-auto mb-10"
@@ -61,7 +69,6 @@ export default function LoginPage() {
           Continue with Google
         </button>
 
-        {/* Verification Tag */}
         <div className="flex items-center justify-center gap-3">
           <div className="h-px w-12 bg-slate-200"></div>
           <p className="text-sm font-black text-orange-400 uppercase tracking-[0.3em]">
