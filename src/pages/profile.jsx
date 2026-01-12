@@ -4,7 +4,7 @@ import {
   Layers, GraduationCap, CheckCircle2, XCircle, MessageSquare, 
   Code2, Briefcase, Edit3, Save, X, Github, Linkedin, 
   ExternalLink, Camera, Plus, Trash2, Eye, LayoutGrid, BellRing,
-  Sparkles, Award, TrendingUp
+  Sparkles, Award, TrendingUp, Users, Clock, Activity
 } from 'lucide-react';
 
 // FIREBASE IMPORTS
@@ -198,34 +198,108 @@ export default function UserProfile() {
           </div>
         </div>
 
+        {/* Compact Summary Card */}
+        <div className="mb-8">
+          <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-[2rem] p-6 md:p-8 shadow-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Projects Count */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div className="flex items-center justify-between mb-3">
+                  <LayoutGrid className="text-white/80" size={24} />
+                  <span className="text-3xl font-black text-white">{userProjects.length}</span>
+                </div>
+                <p className="text-white/90 font-bold text-sm uppercase tracking-wide">Active Projects</p>
+              </div>
+
+              {/* Pending Requests */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div className="flex items-center justify-between mb-3">
+                  <BellRing className="text-white/80" size={24} />
+                  <span className="text-3xl font-black text-white">{requests.length}</span>
+                </div>
+                <p className="text-white/90 font-bold text-sm uppercase tracking-wide">Pending Requests</p>
+                {requests.length > 0 && (
+                  <p className="text-white/70 text-xs mt-2 font-semibold">Action Required</p>
+                )}
+              </div>
+
+              {/* Quick Stats */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div className="flex items-center justify-between mb-3">
+                  <Activity className="text-white/80" size={24} />
+                  <span className="text-3xl font-black text-white">{profile.skills?.length || 0}</span>
+                </div>
+                <p className="text-white/90 font-bold text-sm uppercase tracking-wide">Skills</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-20">
           
           <div className="lg:col-span-8 space-y-8">
             
-            {/* Join Requests */}
+            {/* Join Requests - Decision Ready */}
             <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] p-8 md:p-10 shadow-xl border border-slate-200/50">
-              <h2 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-4">
-                <BellRing size={20} className="text-orange-500"/> Incoming Requests ({requests.length})
-              </h2>
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-black text-slate-900 flex items-center gap-4">
+                  <BellRing size={20} className="text-orange-500"/> Incoming Requests
+                </h2>
+                {requests.length > 0 && (
+                  <span className="px-4 py-2 bg-orange-500/10 text-orange-600 rounded-full text-sm font-black">
+                    {requests.length} Pending
+                  </span>
+                )}
+              </div>
               {requests.length === 0 ? (
                 <div className="py-12 text-center bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
+                  <BellRing className="mx-auto mb-4 text-slate-300" size={48} />
                   <p className="text-slate-400 font-bold">No pending requests at the moment</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {requests.map(req => (
-                    <div key={req.id} className="bg-white p-6 rounded-3xl border-2 border-slate-100 flex items-center justify-between hover:shadow-xl transition-all">
-                      <div className="flex items-center gap-5">
-                        <img src={req.applicantPhoto} className="w-16 h-16 rounded-2xl object-cover" alt="" />
-                        <div>
-                          <p className="font-black text-slate-900 text-lg mb-1">{req.applicantName}</p>
-                          <p className="text-orange-500 font-bold text-sm uppercase">{req.projectTitle}</p>
+                    <div key={req.id} className="bg-white p-6 rounded-3xl border-2 border-slate-100 hover:border-orange-200 hover:shadow-xl transition-all">
+                      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        {/* Applicant Info */}
+                        <div className="flex items-start gap-5 flex-1">
+                          <img src={req.applicantPhoto} className="w-16 h-16 rounded-2xl object-cover ring-2 ring-slate-100" alt="" />
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <p className="font-black text-slate-900 text-lg">{req.applicantName}</p>
+                              <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold">
+                                {req.applicantBranch || 'Student'}
+                              </span>
+                            </div>
+                            <p className="text-orange-500 font-bold text-sm uppercase mb-2">{req.projectTitle}</p>
+                            {req.message && (
+                              <p className="text-slate-600 text-sm font-medium line-clamp-2 mt-2">{req.message}</p>
+                            )}
+                            <div className="flex items-center gap-4 mt-3 text-xs text-slate-500">
+                              <div className="flex items-center gap-1">
+                                <Clock size={14} />
+                                <span className="font-semibold">Applied {req.createdAt ? new Date(req.createdAt.toDate()).toLocaleDateString() : 'Recently'}</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <button onClick={() => handleStatusUpdate(req.id, 'accepted')} className="p-3 bg-green-500 text-white rounded-2xl hover:scale-110 transition-all"><CheckCircle2 size={20}/></button>
-                        <button onClick={() => handleStatusUpdate(req.id, 'declined')} className="p-3 bg-white text-slate-400 border-2 rounded-2xl hover:text-red-500 hover:border-red-500 transition-all"><XCircle size={20}/></button>
+                        
+                        {/* Decision Actions */}
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <button 
+                            onClick={() => handleStatusUpdate(req.id, 'accepted')} 
+                            className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-105 transition-all shadow-lg shadow-green-500/20 min-w-[140px]"
+                          >
+                            <CheckCircle2 size={18}/> Accept
+                          </button>
+                          <button 
+                            onClick={() => handleStatusUpdate(req.id, 'declined')} 
+                            className="px-6 py-3 bg-white text-slate-600 border-2 border-slate-200 rounded-2xl font-bold flex items-center justify-center gap-2 hover:border-red-500 hover:text-red-600 transition-all min-w-[140px]"
+                          >
+                            <XCircle size={18}/> Decline
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
