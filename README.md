@@ -91,6 +91,10 @@ Create a **.env** file in the root directory and add your Firebase configuration
 
 npm run dev
 
+**LIVE HOSTED WEBSITE LINK-**:
+https://projectmate-1fb9c.firebaseapp.com
+**DEMO VIDEO LINK**-:
+https://youtu.be/ZYhh-YNeUks?si=0QAU40pjx-rUAPJT
 **Visuals (Screenshots)**
 <img width="1709" height="948" alt="Screenshot 2025-12-31 at 12 00 01 AM" src="https://github.com/user-attachments/assets/8f5f0078-cc00-4d77-aebc-0339e064f417" />
 <img width="3420" height="5258" alt="screencapture-projectmate-1fb9c-web-app-login-2025-12-31-00_02_40" src="https://github.com/user-attachments/assets/619c21dc-c057-46ab-857d-7079df2d4516" />
