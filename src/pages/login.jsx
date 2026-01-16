@@ -1,37 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Layers, Users, Rocket, Search } from "lucide-react";
+import Navbar from './Navbar';
+
 
 export default function ProjectMateLanding() {
   return (
     <div className="min-h-screen bg-white w-full">
-      {/* Navigation - Increased height and font size */}
-      <nav className="flex items-center justify-between px-8 md:px-12 py-8 border-b border-gray-100 sticky top-0 bg-white z-50 w-full">
-        <Link to="/" className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-            <Layers className="w-8 h-8 text-white" />
-          </div>
-          <span className="text-3xl font-black text-orange-500 tracking-tighter">ProjectMate</span>
-        </Link>
-        <div className="flex items-center gap-12">
-          <div className="flex items-center gap-12">
-            <Link to="/projects" className="relative text-gray-500 hover:text-orange-500 text-xl font-bold transition-colors duration-200 group">
-              Projects
-              <span className="absolute -bottom-2 left-0 w-0 h-1 bg-orange-500 transition-all duration-200 group-hover:w-full"></span>
-            </Link>
-            
-            <Link to="/create" className="relative text-gray-500 hover:text-orange-500 text-xl font-bold transition-colors duration-200 group">
-              Post Project
-              <span className="absolute -bottom-2 left-0 w-0 h-1 bg-orange-500 transition-all duration-200 group-hover:w-full"></span>
-            </Link>
-            
-            <Link to="/profile" className="relative text-gray-500 hover:text-orange-500 text-xl font-bold transition-colors duration-200 group">
-              Profile
-              <span className="absolute -bottom-2 left-0 w-0 h-1 bg-orange-500 transition-all duration-200 group-hover:w-full"></span>
-            </Link>
-          </div>
-        </div>
-      </nav>
+     <Navbar />
+     
+           {/* 2. Added pt-24 to prevent overlap with fixed navbar */}
+           <div className="pt-0 max-w-4xl mx-auto px-6 pb-16 md:pb-24"></div>
 
       {/* Hero Section - Full Width & Massive Text */}
       <section className="px-8 md:px-12 py-24 md:py-32 w-full">

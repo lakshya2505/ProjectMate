@@ -12,8 +12,8 @@ export default function SetupProfile() {
   const navigate = useNavigate();
   
   // BASIC INFO
-  const [branch, setBranch] = useState('Electronics & Instrumentation');
-  const [year, setYear] = useState('2nd Year');
+  const [branch, setBranch] = useState('');
+  const [year, setYear] = useState('');
   const [bio, setBio] = useState('');
   
   // ROLES & SKILLS

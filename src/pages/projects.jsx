@@ -3,6 +3,7 @@ import { Layers, Search, Bookmark, Loader2, FilterX } from 'lucide-react'; // Ad
 import { Link } from 'react-router-dom';
 import { db } from '../services/firebase';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import Navbar from './Navbar';
 
 export default function ExploreProjects() {
   const [projects, setProjects] = useState([]);
@@ -74,20 +75,7 @@ export default function ExploreProjects() {
 
   return (
     <div className="min-h-screen bg-gray-50 w-full">
-      <nav className="bg-white flex items-center justify-between px-8 md:px-12 py-8 border-b border-gray-200 sticky top-0 z-50 w-full">
-        <Link to="/" className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center shadow-md">
-            <Layers className="w-8 h-8 text-white" />
-          </div>
-          <span className="text-3xl font-black text-orange-500 tracking-tighter uppercase">ProjectMate</span>
-        </Link>
-        <div className="flex items-center gap-12">
-          <Link to="/projects" className="text-orange-500 font-bold text-xl border-b-4 border-orange-500">Projects</Link>
-          <Link to="/create" className="text-gray-500 hover:text-orange-500 font-semibold text-xl transition-colors">Post Project</Link>
-          <Link to="/profile" className="text-gray-500 hover:text-orange-500 font-semibold text-xl transition-colors">Profile</Link>
-        </div>
-      </nav>
-
+      <Navbar />
       <div className="px-8 md:px-12 py-16 w-full">
         <div className="w-full">
           <div className="mb-16">

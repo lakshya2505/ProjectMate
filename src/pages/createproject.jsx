@@ -3,6 +3,7 @@ import { Layers, X, Rocket, CheckCircle, Loader2, Plus, Search, Code2, Users2 } 
 import { Link, useNavigate } from 'react-router-dom';
 import { db, auth } from '../services/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import Navbar from './Navbar';
 
 // DATASETS
 const ROLE_SUGGESTIONS = ["Frontend Developer", "Backend Developer", "Full Stack Developer", "UI/UX Designer", "App Developer", "AI/ML Engineer", "Data Scientist", "Embedded Engineer", "IoT Developer", "Cloud Engineer"];
@@ -28,35 +29,43 @@ export default function PostNewProject() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!auth.currentUser) return alert("Please login first!");
+    if (!projectName || !tagline) return alert("Title and Tagline are required!");
+    
     setIsPosting(true);
     try {
       await addDoc(collection(db, "projects"), {
-        title: projectName, tagline, description, projectType, rolesNeeded: roles, techStack, duration,
-        authorName: auth.currentUser.displayName, authorPhoto: auth.currentUser.photoURL, authorId: auth.currentUser.uid, createdAt: serverTimestamp(),
+        title: projectName, 
+        tagline, 
+        description, 
+        projectType, 
+        rolesNeeded: roles, 
+        techStack, 
+        duration,
+        authorName: auth.currentUser.displayName || "Nirma Student", 
+        authorPhoto: auth.currentUser.photoURL, 
+        authorId: auth.currentUser.uid, 
+        createdAt: serverTimestamp(),
+        members: [auth.currentUser.uid], // Automatically add creator as first member
+        status: 'open'
       });
       navigate('/projects');
-    } catch (error) { console.error(error); } finally { setIsPosting(false); }
+    } catch (error) { 
+        console.error(error); 
+        alert("Error launching project. Check console.");
+    } finally { 
+        setIsPosting(false); 
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#FBFBFD] w-full font-sans antialiased text-slate-900">
-      {/* Premium Navbar */}
-     <nav className="bg-white flex items-center justify-between px-8 md:px-12 py-8 border-b border-gray-200 sticky top-0 z-50 w-full">
-             <Link to="/" className="flex items-center gap-4">
-               <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center shadow-md">
-                 <Layers className="w-8 h-8 text-white" />
-               </div>
-               <span className="text-3xl font-black text-orange-500 tracking-tighter uppercase">ProjectMate</span>
-             </Link>
-             <div className="flex items-center gap-12">
-               <Link to="/projects" className="text-gray-500 hover:text-orange-500 font-semibold text-xl transition-colors">Projects</Link>
-               <Link to="/create" className="text-orange-500 font-bold text-xl border-b-4 border-orange-500" >Post Project</Link>
-               <Link to="/profile" className="text-gray-500 hover:text-orange-500 font-semibold text-xl transition-colors">Profile</Link>
-             </div>
-           </nav>
-           
+      
+      {/* 1. Navbar Integrated Here */}
+      <Navbar />
 
-      <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
+      {/* 2. Added pt-24 to prevent overlap with fixed navbar */}
+      <div className="pt-24 max-w-6xl mx-auto px-6 pb-16 md:pb-24">
+        
         {/* Title Section */}
         <div className="mb-20 text-center md:text-left">
           <h1 className="text-6xl md:text-8xl font-black tracking-tight leading-none mb-6">
@@ -83,53 +92,53 @@ export default function PostNewProject() {
                   <input value={projectName} onChange={(e) => setProjectName(e.target.value)} placeholder="e.g. Smart Irrigation System" 
                     className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-2xl px-6 py-5 text-xl font-bold transition-all outline-none" />
                 </div>
-    <div>
-      <label className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-3">Tagline</label>
-      <input value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="e.g. An AI-powered solution for water management" 
-        className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-2xl px-6 py-5 text-xl font-bold transition-all outline-none" />
-    </div>
+                <div>
+                  <label className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-3">Tagline</label>
+                  <input value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="e.g. An AI-powered solution for water management" 
+                    className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-2xl px-6 py-5 text-xl font-bold transition-all outline-none" />
+                </div>
 
-    <div>
-      <label className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-3">Project Type</label>
-      <select value={projectType} onChange={(e) => setProjectType(e.target.value)} 
-        className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-2xl px-6 py-5 text-xl font-bold transition-all outline-none">
-        <option value="sideProject">Side Project</option>
-        <option value="startup">Startup</option>
-        <option value="research">Research</option>
-         <option value="Hackathon">Hackathon</option>
-        <option value="other">Other</option>
-      </select>
-    </div>
-  </div>
-</div>
+                <div>
+                  <label className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-3">Project Type</label>
+                  <select value={projectType} onChange={(e) => setProjectType(e.target.value)} 
+                    className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-2xl px-6 py-5 text-xl font-bold transition-all outline-none">
+                    <option value="sideProject">Side Project</option>
+                    <option value="startup">Startup</option>
+                    <option value="research">Research</option>
+                    <option value="Hackathon">Hackathon</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
 
-{/* CARD 2: PROJECT DETAILS */}
-<div className="bg-white rounded-[2.5rem] p-10 md:p-14 shadow-sm border border-slate-100">
-  <div className="flex items-center gap-4 mb-10">
-    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 font-black">2</div>
-    <h2 className="text-2xl font-black uppercase tracking-tight">Project Details</h2>
-  </div>
+            {/* CARD 2: PROJECT DETAILS */}
+            <div className="bg-white rounded-[2.5rem] p-10 md:p-14 shadow-sm border border-slate-100">
+              <div className="flex items-center gap-4 mb-10">
+                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 font-black">2</div>
+                <h2 className="text-2xl font-black uppercase tracking-tight">Project Details</h2>
+              </div>
 
-  <div className="space-y-8">
-    <div>
-      <label className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-3">Detailed Description</label>
-      <textarea 
-        value={description} 
-        onChange={(e) => setDescription(e.target.value)} 
-        placeholder="Describe your project, the roles you need, and what your expectations are from applicants..." 
-        className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-2xl px-6 py-5 text-xl font-bold transition-all outline-none placeholder:text-slate-300 leading-relaxed min-h-[300px] resize-none"
-      />
-      <p className="mt-4 text-slate-400 font-bold text-sm italic">
-        Tip: Mention your branch and specific lab requirements if any.
-      </p>
-    </div>
-  </div>
-</div>
+              <div className="space-y-8">
+                <div>
+                  <label className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-3">Detailed Description</label>
+                  <textarea 
+                    value={description} 
+                    onChange={(e) => setDescription(e.target.value)} 
+                    placeholder="Describe your project, the roles you need, and what your expectations are from applicants..." 
+                    className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-2xl px-6 py-5 text-xl font-bold transition-all outline-none placeholder:text-slate-300 leading-relaxed min-h-[300px] resize-none"
+                  />
+                  <p className="mt-4 text-slate-400 font-bold text-sm italic">
+                    Tip: Mention your branch and specific lab requirements if any.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-            {/* CARD 2: TEAM & SKILLS (THE UPGRADED PART) */}
+            {/* CARD 3: TEAM & SKILLS */}
             <div className="bg-white rounded-[2.5rem] p-10 md:p-14 shadow-sm border border-slate-100 space-y-12">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 font-black">2</div>
+                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 font-black">3</div>
                 <h2 className="text-2xl font-black uppercase tracking-tight">Team Matching</h2>
               </div>
 
@@ -189,20 +198,21 @@ export default function PostNewProject() {
                   )}
                 </div>
               </div>
+
               <div>
-                 <label className="flex items-center gap-2 text-sm font-black text-slate-400 uppercase tracking-widest mb-4">
-                <Code2 className="w-4 h-4" /> Duration
-              </label>
-                  <select 
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                    className="w-full bg-slate-900 text-white px-6 py-5 rounded-2xl font-bold focus:ring-4 focus:ring-orange-500/10 focus:bg-slate-800 transition-all outline-none">
-                    <option>1 - 3 Months</option>
-                    <option>&lt;1 Month</option>
-                    <option>3 - 6 Months</option>
-                    <option>6+ Months</option>
-                  </select>
-                </div>
+                <label className="flex items-center gap-2 text-sm font-black text-slate-400 uppercase tracking-widest mb-4">
+                  <Code2 className="w-4 h-4" /> Duration
+                </label>
+                <select 
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  className="w-full bg-slate-900 text-white px-6 py-5 rounded-2xl font-bold focus:ring-4 focus:ring-orange-500/10 focus:bg-slate-800 transition-all outline-none cursor-pointer">
+                  <option>1 - 3 Months</option>
+                  <option>&lt;1 Month</option>
+                  <option>3 - 6 Months</option>
+                  <option>6+ Months</option>
+                </select>
+              </div>
             </div>
 
             <button onClick={handleSubmit} disabled={isPosting} className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-400 text-white py-8 rounded-[2rem] font-black text-3xl transition-all shadow-2xl flex items-center justify-center gap-4 active:scale-95">
@@ -231,24 +241,3 @@ export default function PostNewProject() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
